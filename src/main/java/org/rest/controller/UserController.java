@@ -28,7 +28,6 @@ public class UserController {
     private final NotesModelAssembler notesModelAssembler;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EntityModel<User>> add(@RequestBody User user) {
         User createdUser = userService.create(user);
         return ResponseEntity.created(linkTo(methodOn(UserController.class).get(createdUser.getId())).toUri())
@@ -36,13 +35,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<EntityModel<User>> get(@PathVariable("id") long userId) {
         return ResponseEntity.ok(userModelAssembler.toModel(userService.findById(userId)));
     }
 
     @PostMapping("/{id}/notes")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EntityModel<Note>> addNote(@PathVariable("id") long userId, @RequestBody Note note) {
         Note createdNote = notesService.create(userId, note);
         return ResponseEntity.created(linkTo(methodOn(NotesController.class).get(createdNote.getId())).toUri())
@@ -50,7 +47,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}/notes")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CollectionModel<EntityModel<Note>>> getNotes(@PathVariable("id") long userId) {
         return ResponseEntity.ok(notesModelAssembler.toCollectionModel(userService.findById(userId).getNotes()));
     }
